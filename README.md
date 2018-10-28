@@ -21,7 +21,8 @@ Gauche scheme shell, version 0.9.4 [utf-8,pthreads], x86_64-pc-linux-gnu
 
 ### referenced
 
-[SICP HTML contents](https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-4.html#%_toc_start)
+[SICP HTML contents](https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-4.html#%_toc_start)  
+[MIT Lecture Video](https://www.youtube.com/playlist?list=PLB63C06FAF154F047)  
 [SICPを読むためにやっておくと便利かもしれないこと](http://qiita.com/da1/items/02f7d2f157c7145d58f2)
 
 
