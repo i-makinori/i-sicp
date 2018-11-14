@@ -1,6 +1,6 @@
 
 ;; samples 1.1.
-(define (square x) (* x x))
+(define (m-square x) (* x x))
 
 (define (sum-of-squares x y)
   (+ (square x) (square y)))
@@ -61,6 +61,5 @@
 
 ;;;; (test 0 (p))
 ;;;; procedure does not end.  because, (= x 0) in if form eval x while to be not functional primirative object. but, (p) calls (p) every times.
-
 
 
