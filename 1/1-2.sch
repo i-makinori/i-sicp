@@ -228,3 +228,49 @@
 ;; =>> n = SITA(a)
 
 
+
+;; samples 1.2.4
+
+(define (expt-s1 b n)
+  (define (iter num count)
+    (if (= 0 count) num
+        (iter (* num b) (- count 1))))
+  (iter 1 n))
+
+(define (expt-s2 b n)
+  (cond ((= n 0) 1)
+        ((even? n) (square (expt-s2 b (/ n 2))))
+        (else (* b (expt-s2 b (- n 1))))))
+
+;; remainder :: n mod m === n%m
+
+
+;; exercise 1.16
+
+
+;; (expt-s2 1 (expt 100 50000)) => out of memory
+
+;; (define (expt-s2i base num) ;; iterative expt SITA(log n)
+;;   (define (iter n current state)
+;;     (format #t "~A ~A ~A~%" n current state)
+;;     (cond ((= n 0) (* current state))
+;;           ((= current 1)
+;;            (iter (- n 1) base (* state base)))
+;;           ((even? n)
+;;            (iter (/ n 2) (square (* current state)) 1))
+;;           (else
+;;            (iter (- n 1) current (* state base)))))
+;;   (iter num 1 1))
+
+
+;; cheat : http://www.billthelizard.com/2010/01/sicp-exercise-116-fast-exponentiation.html
+
+(define (expt-s2i base num)
+  (define (iter b n a)
+    (cond ((= n 0) a)
+          ((even? n) (iter (square b) (/ n 2) a))
+          (else (iter  b (- n 1) (* a b)))))
+  (iter base num 1))
+
+
+
