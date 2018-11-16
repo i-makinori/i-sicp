@@ -179,3 +179,52 @@
 
 (define (fib-about n)
   (/ (expt fai n) (sqrt 5)))
+
+
+;; exercise 1.14
+
+;; ref : 1.2.2
+
+;; >> change 11 (50 25 10 5 1)
+;; | change -39 (50 25 10 5 1) => fail
+;; | change 11 (25 10 5 1)
+;;   | change -14 (25 10 5 1) => fail
+;;   | change 11 (10 5 1)
+;;     | change 1 (10 5 1)
+;;     | | change -9 (10 5 1) => fail
+;;     | | change 1 (5 1)
+;;     |   | change -4 (1) => fail
+;;     |   | change 1 (1)
+;;     |     | change 0 (1) => just
+;;     |     | change 1 () => fail
+;;     | change 11 (5 1)
+;;       | change 6 (5 1)
+;; ...
+;; ...
+;; ...
+
+
+;; exercise 1.15
+
+(define (cube x)
+  (* x x x))
+
+(define (p x) (- (* 3 x) (* 4 (cube x))))
+
+(define (sine angle)
+  (if (< (abs angle) 0.1) ;; 0.1 :: threshold
+      angle
+      (begin
+        (format #t "p call~%")
+        (p (sine (/ angle 3.0))))))
+
+;; (sine 12.5) => 5 times
+;;
+;; n is steps and also spaces of sine(a), n such as first n from 0,
+;;((|a|*(1/3)^n) < (t::threshold))
+;; => (1/3)^n < t/|a|
+;; => n > log(1/3, t/|a|)
+;; = n > log(3, |a|/t)
+;; =>> n = SITA(a)
+
+
