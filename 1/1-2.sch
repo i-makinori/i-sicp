@@ -108,4 +108,74 @@
 (define (k11 n) (* 5 (* n n)))
 
 
-;; 
+
+;; sample 1.2.2 fibonacci
+(define (fib n)
+  (cond ((= n 0) 0)
+        ((= n 1) 1)
+        (else (+ (fib (- n 1))
+                 (fib (- n 2))))))
+
+(define (fib n)
+  (define (fib-iter a b count)
+    (if (= count 0)
+        b
+        (fib-iter (+ a b) a (- count 1))))
+  (fib-iter 1 0 n))
+
+;; sample 1.2.2 counting change
+
+(define (first-denomination)
+  (list 50 25 10 5 1))
+
+(define (change amount denomination)
+  (define (aux amo den)
+    ;;(format #t "~A ~A ~%" amo den)
+    (cond ((= 0 amo) 1)
+          ((null? den) 0)
+          ((> 0 amo) 0)
+          (else (+ (aux (- amo (car den))
+                        den)
+                   (aux amo
+                        (cdr den))))))
+  (aux amount denomination))
+
+;; (change 100 (first-denomination)) => 292
+
+
+;; exercise 1.11
+
+(define (f n) ;; recursive
+  (if (< n 3) n
+      (+ (f (- n 1)) (* 2 (f (- n 2))) (* 3 (f (- n 3))))))
+
+;; 0 1 2 4 11 25 59 142
+
+(define (f n) ;; iterative
+  (define (aux m3 m2 m1 count)
+    ;;(format #t "~A : ~A ~A ~A~%" count m3 m2 m1)
+    (cond ((< n 2) n)
+          ((= n count) m1)
+          (else (aux m2 m1
+                     (+ (* m1 1) (* m2 2) (* m3 3))
+                     (+ count 1)))))
+  (aux 0 1 2 2))
+
+
+;; exercise 1.12
+
+(define (pascal row col)
+  ;; pascal triangle
+  (cond ((= col 0) 1)
+        ((= col row) 1)
+        (else (+ (pascal (- row 1) col)
+                 (pascal (- row 1) (- col 1))))))
+
+
+;; exercise 1.13
+
+(define fai
+  (/ (+ 1 (sqrt 5)) 2))
+
+(define (fib-about n)
+  (/ (expt fai n) (sqrt 5)))
