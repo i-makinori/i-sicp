@@ -323,3 +323,30 @@
 
 ;; (map fib '(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15))
 
+
+;; samples 1.2.5
+(define (gcd a b)
+  (if (= b 0) a
+      (gcd b (remainder a b))))
+
+;; exercise 1.20
+
+(gcd 206 40)
+(if (= 40 0) 40
+    (gcd 40 (remainder 206 40)))
+
+(gcd 40 (remainder 206 40))
+
+(if (= (remainder 206 40) 0)
+    (remainder 206 40)
+    (gcd (remainder 206 40) (remainder 40 (remainder 206 40))))
+
+(gcd (remainder 206 40) (remainder 40 (remainder 206 40)))
+
+(if (= (remainder 206 40) 0)
+    (remainder 206 40)
+    (gcd (remainder 206 40) (remainder 40 (remainder 206 40))))
+
+;;
+
+

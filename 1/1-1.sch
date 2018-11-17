@@ -52,7 +52,9 @@
 ;;;; function as combinated, minus or plus is if b is bigger than 0 or not
 
 ;; exercise 1.5
-(define (p) (p))
+(define (p)
+  (format #t "p called ~%")
+  (p))
 
 (define (test x y)
   (if (= x 0)
