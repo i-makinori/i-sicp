@@ -274,3 +274,52 @@
 
 
 
+;; exercise 1.17
+(define (*-1 a b)
+  (format #t "~A ~A ~%" a b)
+  (if (= b 0)
+      0
+      (+ a (*-1 a (- b 1)))))
+
+(define (*-2 a b)
+  (define (iter a-num b-num state)
+    (cond ((= b-num 0) state)
+          ((even? b-num)
+           (iter (* 2 a-num) (/ b-num 2) state))
+          (else
+           (iter a-num (- b-num 1) (+ state a-num)))))
+  (iter a b 0))
+
+;; all 2x have more than once iters.
+
+
+;; exercise 1.18
+;; first n such as , f(_, a) => a*2*(1/2)^n <= 1
+;; => (1/2)^n <= 1/(2*a) and first n
+;; => n = log (1/2, 1/(2*a))
+;; => n = log(2, 2*a)
+;; => n = log(a-1)
+;; => SITA(log(a))
+
+
+;; exercise 1.19
+
+
+(define (fib n)
+  (define (iter a b p q count)
+    ;; (format #t "~A ~A ~A ~A ~A~%" a b p q count)
+    (cond ((= count 0) b)
+          ((even? count)
+           (iter a b
+                 (+ (* p p) (* q q))
+                 (+ (* 2 p q) (* q q))
+                 (/ count 2)))
+          (else (iter (+ (* b q) (* a q) (* a p))
+                      (+ (* b p) (* a q))
+                      p
+                      q
+                      (- count 1)))))
+  (iter 1 0 0 1 n))
+
+;; (map fib '(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15))
+
