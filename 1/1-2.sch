@@ -347,6 +347,274 @@
     (remainder 206 40)
     (gcd (remainder 206 40) (remainder 40 (remainder 206 40))))
 
+
+;; samples 1.2.6
+
+(define (smallest-divisor n)
+  (find-divisor n 2))
+
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) n)
+        ((= (remainder n test-divisor) 0) test-divisor)
+        (else (find-divisor n (+ test-divisor 1)))))
+
+(define (prime? n)
+  (= n (smallest-divisor n)))
+
+
+(define (expmod base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (remainder (square (expmod base (/ exp 2) m))
+                    m))
+        (else
+         (remainder (* base (expmod base (- exp 1) m))
+                    m))))
+
+(define (fermat-test n)
+  (define (try-it a)
+    (= (expmod a n n) a))
+  (try-it (+ 1 (random (- n 1)))))
+
+(define (fast-prime? n times)
+  (cond ((= times 0) true)
+        ((fermat-test n) (fast-prime? n (- times 1)))
+        (else false)))
+
+;; exercise 1.21
+
+;; (smallest-divisor 199) => 199
+;; (smallest-divisor 1999) => 1999
+;; (smallest-divisor 19999) => 7
+
+
+;; exercise 1.22
+
+(define (timed-prime-test n)
+  (newline)
+  (display n)
+  (start-prime-test n (runtime)))
+
+(define (start-prime-test n start-time)
+  (if (prime? n)
+      (report-prime (- (runtime) start-time))))
+
+(define (report-prime elapsed-time)
+  (display " *** ")
+  (display elapsed-time))
+
+
+(define (search-for-primes min num-iter)
+  (define (iter n count)
+    (cond ((= count 0) '())
+          ((prime? n)
+           (timed-prime-test n)
+           (iter (+ n 2) (- count 1)))
+          (else
+           (iter (+ n 2) count))))
+  (iter (if (even? min) (+ min 1) min)
+        num-iter))
+
+
+;; 1 (user) => (search-for-primes 100000000000 10)
+
+;; 100000000003 *** .3100000000000023
+;; 100000000019 *** .3100000000000023
+;; 100000000057 *** .3100000000000023
+;; 100000000063 *** .30000000000001137
+;; 100000000069 *** .3100000000000023
+;; 100000000073 *** .3100000000000023
+;; 100000000091 *** .3100000000000023
+;; 100000000103 *** .30999999999998806
+;; 100000000129 *** .3199999999999932
+;; 100000000171 *** .3100000000000023
+
+
+
+;; exercise 1.23
+
+
+(define (smallest-divisor n)
+  (find-divisor n 2))
+
+(define (next-divisor n)
+  (cond ((= n 2) 3)
+        (else (+ n 2))))
+
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) n)
+        ((= (remainder n test-divisor) 0) test-divisor)
+        (else (find-divisor n (next-divisor test-divisor)))))
+
+(define (prime? n)
+  (= n (smallest-divisor n)))
+
+
+;; 1 (user) => (search-for-primes 100000000000 10)
+
+;; 100000000003 *** .19999999999998863
+;; 100000000019 *** .20000000000000284
+;; 100000000057 *** .20000000000000284
+;; 100000000063 *** .20999999999999375
+;; 100000000069 *** .20000000000000284
+;; 100000000073 *** .21000000000000796
+;; 100000000091 *** .20000000000000284
+;; 100000000103 *** .20999999999999375
+;; 100000000129 *** .20000000000000284
+;; 100000000171 *** .20000000000000284
+
+;; about 2/3 real time of previous algorithm
+
+;; exercise 1.24
+
+(define (search-for-primes min num-iter)
+  (define (iter n count)
+    (cond ((= count 0) '())
+          ((and (fast-prime? n 1) (prime? n))
+           (timed-prime-test n)
+           (iter (+ n 2) (- count 1)))
+          (else
+           (iter (+ n 2) count))))
+  (iter (if (even? min) (+ min 1) min)
+        num-iter))
+
+(define (start-prime-test n start-time)
+  (if (fast-prime? n 1)
+      (report-prime (- (runtime) start-time))))
+
+
+;; 1 (user) => (search-for-primes 100000000000 10)
+
+;; 100000000003 *** 0.
+;; 100000000019 *** 0.
+;; 100000000057 *** 0.
+;; 100000000063 *** 0.
+;; 100000000069 *** 0.
+;; 100000000073 *** 0.
+;; 100000000091 *** 0.
+;; 100000000103 *** 0.
+;; 100000000129 *** 0.
+;; 100000000171 *** 0.
+
+;; discrepancy of primes was not found because procedure of search-for-prime also tests accurate is-prime test.
+
+
+
+;; exercise 1.25
+
+(define (expmod base exp m) ;; TB
+  (remainder (expt-s2i base exp) m))
+
+(define (expmod base exp m) ;; TA
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (remainder (square (expmod base (/ exp 2) m))
+                    m))
+        (else
+         (remainder (* base (expmod base (- exp 1) m))
+                    m))))
+
+(define (expt-s2i base num)
+  (define (iter b n a)
+    (cond ((= n 0) a)
+          ((even? n) (iter (square b) (/ n 2) a))
+          (else (iter  b (- n 1) (* a b)))))
+  (iter base num 1))
+
+;; not correct expmod : GCD: great common divisor is not applied
+;; through comparison of two defining of expmod,
+;; linear log(n) space of nest of remainder is appeared in TA, but TB is not.
+
+
+;; exercise 1.26
+
+#|
+(define (expmod base exp m) ;; TC
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (remainder (* (expmod base (/ exp 2) m)
+                       (expmod base (/ exp 2) m))
+                    m))
+        (else
+         (remainder (* base (expmod base (- exp 1) m))
+                    m))))
+|#
+
+;; space of TA is log(n)
+;; space of TB is log(n)^n = n
+;; TB makes twig everywhen : called expmod and exp is even.
 ;;
+;; *
+;; * *
+;; * * * *
+;; * * * * * * * *
+
+
+;; exercise 1.27
+
+;; => (map prime? '(561 1105 1729 2465 2821 6601))
+;; (#f #f #f #f #f #f)
+
+;; (map (lambda (x) (fast-prime? x 1)) '(561 1105 1729 2465 2821 6601))
+;; (#t #t #t #t #t #t)
+
+
+;; exercise 1.28
+
+;; (map prime? '(2 3 5 7 11 113))
+;; => all #t
+;; (map (lambda (x) (fast-prime? x 1)) '(2 3 5 7 11 113))
+;; => all #t
+
+
+;; ref : https://en.wikipedia.org/wiki/Miller%E2%80%93Rabin_primality_test
+
+(define (mirabiler-test n d) ;; miller rabin prime test
+  (define (x-test x ago)
+    (format #t " :: ~A~%" x)
+    (cond ((= x 1) false)
+          ((= x ago) false)
+          ((= x (- n 1)) true)
+          (else (x-test (remainder (square x) n) x))))
+  (define (try-it  x)
+    ;; (format #t "~A ~A ~A ~%" n d x)
+    (cond ((or (= x 1) (= x (- n 1)))
+           true)
+          (else 
+           (x-test (remainder (square x) n) n))))
+  (try-it
+   (remainder (expt (+ 2 (random (- n 2 1)))
+                    d)
+              n)))
+
+(define (mirabiler-prime? n times)
+  (define (call-mirabiler d time)
+    (cond ((= time 0) true)
+          ((mirabiler-test n d)
+           (call-mirabiler
+            d
+            (- time 1)))
+          (else false)))
+  (cond ((= n 1) false)
+        ((or (= n 2) (= n 3)) true)
+        ((even? n) false)
+        ;;
+        (else
+         (call-mirabiler (find-d (- n 1) 2)
+                         times))))
+
+(define (find-d num state)
+  (cond ((< num state)
+         (format #t "fail to find D : num ~A < state ~A~%" num state))
+        ((and (= 0 (remainder num state)) (odd? (/ num state)))
+         (/ num state))
+        (else
+         (find-d num (* state 2)))))
+
+;; 1 (user) => (map (lambda (x) (mirabiler-prime? x 1)) '(2 3 5 7 11 113))
+;; ;Value 39: (#t #t #t #t #t #t)
+
+;; 1 (user) => (map (lambda (x) (mirabiler-prime? x 1)) '(561 1105 1729 2465 2821 6601)))
+;; ;Value 40: (#f #f #f #f #f #f)
 
 
