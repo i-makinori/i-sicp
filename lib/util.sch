@@ -14,6 +14,9 @@
 (define (dec n) (- n 2))
 
 
+(define (average a b)
+  (/ (+ a b) 2))
+
 
 ;; exercise 1.32
 
