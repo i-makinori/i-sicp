@@ -127,7 +127,7 @@
 
 ;; exercise 1.33
 
-(load "../lib/util.sch") ;; prime?
+(load "../lib/prime-util.sch") ;; prime?
 
 (define (filterd-accumulate combiner null-value term a next b filter)
   (define (iter a state)
