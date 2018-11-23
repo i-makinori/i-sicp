@@ -77,15 +77,27 @@
 
 
 
-
-
-
 ;; great common divisor
 ;; samples 1.2.5
 (define (gcd a b)
   (if (= b 0) a
       (gcd b (remainder a b))))
 
+
+
+;; chapter 1.3.3
+;; fixed-point
+
+(define (fixed-point f first-guess)
+  (define tolerance 0.00001)
+  (define (close-enough? v1 v2)
+    (< (abs (- v1 v2)) tolerance))
+  (define (try guess)
+    (let ((next (f guess)))
+      (if (close-enough? guess next)
+          next
+          (try next))))
+  (try first-guess))
 
 
 
